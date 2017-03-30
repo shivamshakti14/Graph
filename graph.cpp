@@ -9,7 +9,10 @@ class Directed_Graph{
 public:
 	int vertex,edge;
 	std::vector< list <pair < int,int> > > graph;
+	std::vector<int> size_of_con_comp;
+	int size;
 	Directed_Graph(int nodes){
+		size=0;
 		vertex = nodes;
 		graph.resize(vertex+1);
 	}
@@ -31,6 +34,7 @@ public:
 		list< pair < int,int > >::iterator itr=graph[source].begin();
 		cout<<source<<" ";
 		visited[source]=1;
+		size++;
 		while(itr!=graph[source].end()){
 			if(visited[itr->first]==0){
 				DFS_util(itr->first,visited);
@@ -94,6 +98,26 @@ public:
 		}
 		cout<<endl;
 	}
+	void connected_component(){
+		int source =1;
+		std::vector<int> visited(vertex+1);
+		fill(visited.begin(), visited.end(),0);
+		size=0;
+		DFS_util(source,visited);
+		size_of_con_comp.push_back(size);
+		size=0;
+		for(int i=1;i<=vertex;i++){
+			if(visited[i]==0){
+				DFS_util(i,visited);
+				size_of_con_comp.push_back(size);
+				size=0;
+			}
+		}
+		cout<<"total diff conn component "<<size_of_con_comp.size()<<endl;
+		for(int i=0;i<size_of_con_comp.size();i++){
+			cout<<size_of_con_comp[i]<<" ";
+		}cout<<endl;
+	}
 };
 
 int main(){
@@ -104,9 +128,12 @@ int main(){
 	G.add_edge(3,2,13);
 	G.add_edge(2,3,433);
 	G.add_edge(4,5,343);
+	G.add_edge(6,7,343);
+	G.add_edge(6,8,5435);
 	G.print_graph();
 	int source=2;
 	G.BFS(source);
 	G.DFS(source);
+	G.connected_component(); // total connected connected and size of each
 	return 0;
 }
